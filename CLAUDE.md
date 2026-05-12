@@ -18,9 +18,12 @@ A scaffold for running **eiriks-team** — a Claude Code agent team with three s
 - **dev-database-postgres** — PostgreSQL schema, indexes, migrations (incl. Supabase → standalone Postgres data path)
 - **dev-frontend-react** — React + TypeScript, primary engagement: migrating from `@supabase/supabase-js` to a typed REST client
 - **dev-researcher** — prior art, library comparisons, current best practices — recommends, doesn't survey
+- **dev-api-specialist** — third-party API evaluation BEFORE integration (auth, rate limits, SLA, versioning, webhooks, sandbox, vendor lock-in)
 - **dev-skeptic** — implementation-level adversarial review (rollback, lock contention, scope creep, type drift)
+- **dev-security** — dependency CVE audits, API/data-flow exposure review, auth and secrets validation
+- **dev-qa** — test coverage audit, missing-test authoring, "nothing ships untested" gatekeeper
 
-All twelve teammates operate under one underlying team called `eiriks-team`. This sidesteps the "one team per session" limitation — you can run `/design-team`, `/gdpr-team`, and `/dev-team` in the same session without tearing the team down between them.
+All fifteen teammates operate under one underlying team called `eiriks-team`. This sidesteps the "one team per session" limitation — you can run `/design-team`, `/gdpr-team`, and `/dev-team` in the same session without tearing the team down between them.
 
 ## How to use
 
@@ -42,7 +45,7 @@ Each slash command bootstraps the relevant sub-team, runs the exploration, press
 
 ## How to evolve the team (the training loop)
 
-The twelve teammates' system prompts live in `.claude/agents/`. Each is a markdown file with YAML frontmatter (name, description, optional `tools`, optional `model`) and a body that becomes the teammate's system prompt.
+The fifteen teammates' system prompts live in `.claude/agents/`. Each is a markdown file with YAML frontmatter (name, description, optional `tools`, optional `model`) and a body that becomes the teammate's system prompt.
 
 When a teammate misses something or pushes the wrong direction:
 
@@ -50,7 +53,13 @@ When a teammate misses something or pushes the wrong direction:
 2. Commit the change. The git history *is* the training history.
 3. Next slash-command invocation runs against the updated definition.
 
-To make a teammate cheaper/faster, add `model: sonnet` (or `model: haiku`) to its frontmatter. Without that line, teammates inherit the project's default model. The GDPR and dev-researcher roles are good candidates for `model: sonnet` if cost matters — they trade some depth for speed. Code-producing roles (`dev-backend-dotnet`, `dev-database-postgres`, `dev-frontend-react`) typically benefit from staying on the larger model.
+To make a teammate cheaper/faster, add `model: sonnet` (or `model: haiku`) to its frontmatter. Without that line, teammates inherit the project's default model.
+
+Current model assignments:
+- **Sonnet** (synthesis/lookup/templated output): `ux`, `dev-researcher`, `dev-api-specialist`, `dev-qa`, `gdpr-dpo`, `gdpr-privacy-engineer`, `gdpr-incident-responder`
+- **Default / Opus** (code production and adversarial reasoning): `architect`, `dev-backend-dotnet`, `dev-database-postgres`, `dev-frontend-react`, `dev-security`, `skeptic`, `dev-skeptic`, `gdpr-skeptic`
+
+Rule of thumb: code-producing roles and skeptics stay on the larger model — cheapening the skeptics turns them into rubber stamps.
 
 To change *how* a sub-team is bootstrapped (different roles, different task structure, different synthesis style), edit `.claude/commands/<command>.md`.
 

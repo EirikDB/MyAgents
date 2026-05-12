@@ -1,5 +1,5 @@
 ---
-description: Spawn the development sub-team inside eiriks-team to analyze or progress a backend/database/frontend task. The team-lead picks which of dev-backend-dotnet, dev-database-postgres, dev-frontend-react, dev-researcher, dev-skeptic, dev-security, and dev-qa are relevant for the question and spawns only those.
+description: Spawn the development sub-team inside eiriks-team to analyze or progress a backend/database/frontend task. The team-lead picks which of dev-backend-dotnet, dev-database-postgres, dev-frontend-react, dev-researcher, dev-api-specialist, dev-skeptic, dev-security, and dev-qa are relevant for the question and spawns only those.
 argument-hint: <development task, migration step, or implementation question>
 ---
 
@@ -15,6 +15,7 @@ Steps:
    - `dev-database-postgres` — schema, indexes, migrations, Supabase data path.
    - `dev-frontend-react` — React / TypeScript components, Supabase-client replacement, auth from the client side.
    - `dev-researcher` — when the question would benefit from outside grounding (library comparison, prior art, "how do others solve X"). Skip on questions the team can answer from project context alone.
+   - `dev-api-specialist` — when the work involves integrating or evaluating a third-party API/SaaS BEFORE code is written: auth model, rate limits, SLA, versioning, error semantics, webhooks vs polling, sandbox availability, vendor lock-in, data residency. Skip for internal-only APIs and post-integration tasks.
    - `dev-skeptic` — when the work would benefit from adversarial review (migration plans, schema changes, refactors, anything with a rollback risk). Usually yes for plan-shaped work; skip for narrow lookup-style questions.
    - `dev-security` — when new dependencies are added, API surfaces change, auth/auth flows are modified, secrets or credentials are handled, or code touches user data. Also spawn for any Supabase → .NET migration work (RLS-to-app-layer authorization gap). Skip for pure UI work with no new dependencies or API changes.
    - `dev-qa` — when new features are implemented, existing code is refactored, or work is approaching a release gate. Produces a coverage gap report, writes missing tests, and gives a yes/no ship verdict. Skip for pure design, research, or planning tasks where no code is written. **Key rule: dev-qa never modifies a failing test without explicit team-lead or user approval — always escalates first.**
@@ -24,6 +25,7 @@ Steps:
    - **dev-database-postgres** (when spawned): DDL, index strategy, migration plan (pre/data/post), RLS decision, top 3 database risks.
    - **dev-frontend-react** (when spawned): inventory of Supabase call sites and replacements, component / hook contracts, TypeScript snippets, auth flow from the client side, top 3 frontend risks.
    - **dev-researcher** (when spawned): restate the question, recommend one library / pattern / approach, name the runner-up, three caveats, references.
+   - **dev-api-specialist** (when spawned): vendor + product + version evaluated, GO / GO-WITH-CONDITIONS / NO-GO recommendation on first line, integration shape (auth, rate limits, webhooks vs polling, sandbox), top 3 named risks with mitigations, a 1–2 day falsifying spike, open questions to resolve before signing.
    - **dev-skeptic** (when spawned): strongest "don't ship this plan as-is" argument, named failure modes with precedent, highest-risk gap, minimum hardening, what each peer is under-weighting.
    - **dev-security** (when spawned): dependency CVE audit (name, pinned version, known CVEs, recommendation), API surface review (auth gaps, CORS, rate limiting, input validation, secrets exposure), vulnerability list prioritized Critical/High/Medium/Low with concrete fixes for Critical and High, single highest-risk gap.
    - **dev-qa** (when spawned): coverage gap report (P0–P3 gaps named specifically), test code for every P0 and P1 gap, failing test report (code fixed not tests), test-change audit (flag any weakened tests), yes/no release gate verdict. Any failing test that requires changing the test — not the code — must be escalated to team-lead before action.
